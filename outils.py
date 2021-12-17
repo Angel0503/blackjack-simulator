@@ -1,5 +1,12 @@
 def additionCarte(carte):
-    return int(carte[0]) + int(carte[1])
+    carte=str(carte)
+    if len(carte) == 3:
+        if carte[0] == "1":
+            return 10+int(carte[2])
+        else:
+            return 10+int(carte[0])
+    else:
+        return int(carte[0])+int(carte[1])
 
 def coupPredict(mainBanque, maMain):
     stay = "stay"
@@ -140,4 +147,3 @@ def coupPredict(mainBanque, maMain):
     if "4" <maMain < "9":
         return hit
 
-print(coupPredict("7", "105"))
