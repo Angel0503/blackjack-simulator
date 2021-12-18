@@ -147,3 +147,96 @@ def coupPredict(mainBanque, maMain):
     if "4" <maMain < "9":
         return hit
 
+import tkinter as tk
+from random import shuffle
+
+class Carte():
+    def __init__(self, hauteur, couleur):
+        """Initialise les attibuts de l'objet"""
+        self.hauteur = hauteur
+        self.couleur = couleur
+        
+    def __repr__(self):
+        """Créé la méthode du retour de la fonction print de l'objet"""
+        haut={2:"2",3:"3",4:"4",5:"5",
+                 6:"6",7:"7",8:"8",9:"9",
+                 10:"10",11:"10",12:"10",13:"10",14:"11"}
+       
+        return str(haut[self.hauteur])
+class PaquetDeCartes():
+    def __init__(self, liste_cartes):
+        """Méthode qui initialise l'attributs d'un jeu de carte"""
+        self.contenu = liste_cartes
+    
+    def __repr__(self):
+        """Méthode qui affiche le jeu complet avec l'appel de la fonction print"""
+        affichage=""
+        for i in range(len(self.contenu)):
+            affichage=affichage + str(self.contenu[i]) + "\n"
+        return affichage
+        
+    def taille(self):
+        """Méthode qui renvoie le nombre de carte du jeu"""
+        return len(self.contenu)
+
+    def est_vide(self):
+        """Méthode qui renvoie true si le jeu est vide sinon False"""
+        if self.contenu == []:
+            return True
+        else:
+            return False
+    
+    def battre(self):
+        """Méthode qui mélange les cartes"""
+        shuffle(self.contenu)
+        
+    def tirer_carte(self):
+        """Méthode qui permet de tirer une carte du paquet de carte"""
+        if self.est_vide():
+            return None
+        else:
+            carte = self.contenu[0]
+            del self.contenu[0]
+            return carte
+
+    def ajouter_carte(self, carte):
+        """Méthode qui ajoute une carte au paquet"""
+        self.contenu.append(carte)
+        
+    def ajouter_paquet(self, paquet):
+        """Méthode qui ajoute un autre paquet au paquet"""
+        while not paquet.est_vide():
+            self.ajouter_carte(paquet.tirer_carte())
+
+    def distribuer(self, nbjoueurs):
+        """Distribuer un paquet en nbjoueurs paquets """
+        Paquets=[PaquetDeCartes([]) for i in range(nbjoueurs)]
+        numero=0
+        while not self.est_vide():
+            Paquets[numero].ajouter_carte(self.tirer_carte())
+            numero=(numero+1)%nbjoueurs
+        return Paquets
+def testJeu():
+    if __name__ == "__main__":
+        #Main program    
+        jeu52=PaquetDeCartes([])
+        for i in range(2,15):
+            for couleur in ["K","T","P","C"]:
+                jeu52.ajouter_carte(Carte(i,couleur))
+                
+        #print("il y a ",jeu52.taille()," cartes dans le paquet")
+        jeu52.battre()
+        maMain = jeu52.tirer_carte(), jeu52.tirer_carte()
+        #print(maMain)
+        mainBanque = jeu52.tirer_carte()
+        #print(mainBanque)
+        #print(jeu52.taille())
+        return maMain, mainBanque
+
+mains = testJeu()
+print(mains)
+maMain=mains[0]
+print(maMain)
+mainBanque=mains[1]
+print(mainBanque)
+print(coupPredict(mainBanque, maMain))
