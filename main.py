@@ -6,7 +6,6 @@ def decider():
     c1: Carte = Carte(int(input("Votre première carte : ")))
     c2: Carte = Carte(int(input("Votre seconde carte : ")))
     c3: Carte = Carte(int(input("Carte Banque : ")))
-
     print(Carte(c1+c2).choix(c3))
 
 

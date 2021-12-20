@@ -1,12 +1,5 @@
-def additionCarte(carte):
-    carte=str(carte)
-    if len(carte) == 3:
-        if carte[0] == "1":
-            return 10+int(carte[2])
-        else:
-            return 10+int(carte[0])
-    else:
-        return int(carte[0])+int(carte[1])
+import tkinter as tk
+from random import shuffle
 
 def coupPredict(mainBanque, maMain):
     stay = "stay"
@@ -15,7 +8,8 @@ def coupPredict(mainBanque, maMain):
     split = "split"
 
     """Cas du double"""
-    if maMain[0] == maMain[1]:
+    if maMain[0].egal(maMain[1]):
+        print("double")
         """Double 2 ou 3"""
         if maMain[0] == "2" or maMain[0] == "3":
             if mainBanque < "8":
@@ -103,7 +97,10 @@ def coupPredict(mainBanque, maMain):
             return stay
     
     """Tous les autres cas"""
-    maMain = str(additionCarte(maMain))
+    #maMain = str(additionCarte(maMain))
+    maMain = maMain[0].add(maMain[1])
+    maMain = str(maMain)
+    mainBanque = str(mainBanque)
     """Ligne 17 +"""
     if "16" < maMain < "20":
         return stay
@@ -147,9 +144,6 @@ def coupPredict(mainBanque, maMain):
     if "4" <maMain < "9":
         return hit
 
-import tkinter as tk
-from random import shuffle
-
 class Carte():
     def __init__(self, hauteur, couleur):
         """Initialise les attibuts de l'objet"""
@@ -163,6 +157,16 @@ class Carte():
                  10:"10",11:"10",12:"10",13:"10",14:"11"}
        
         return str(haut[self.hauteur])
+    
+    def add(self, other):
+        return self.hauteur + other.hauteur 
+    
+    def egal(self, other):
+        if self.hauteur == other.hauteur:
+            print("egal")
+            return True
+        print("pas egal")
+        return False
 class PaquetDeCartes():
     def __init__(self, liste_cartes):
         """Méthode qui initialise l'attributs d'un jeu de carte"""
@@ -235,8 +239,16 @@ def testJeu():
 
 mains = testJeu()
 print(mains)
+
 maMain=mains[0]
 print(maMain)
+
 mainBanque=mains[1]
 print(mainBanque)
+
+print(maMain[0])
+print(maMain[1])
+
+print(type(maMain[0]))
+
 print(coupPredict(mainBanque, maMain))
