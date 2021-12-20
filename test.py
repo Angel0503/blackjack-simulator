@@ -1,243 +1,110 @@
-import tkinter as tk
-from random import shuffle
+from time import sleep
 
-def additionCarte(carte):
-    if len(carte) == 3:
-        if carte[0] == "1":
-            return 10+int(carte[2])
-        else:
-            return 10+int(carte[0])
-    else:
-        return int(carte[0])+int(carte[1])
+def decider(carte1, carte2, carte3):
+    """
+    Permet à l'utilisateur de saisir ses deux cartes
+    :return:
+    """
+    c1: Carte = Carte(carte1)
+    c2: Carte = Carte(carte2)
+    c3: Carte = Carte(carte3)
+    print(Carte(c1+c2).choix(c3))
 
-def coupPredict(mainBanque, maMain):
-    stay = "stay"
-    hit = "hit"
-    double = "double"
-    split = "split"
 
-    """Cas du double"""
-    if maMain[0] == maMain[1]:
-        """Double 2 ou 3"""
-        if maMain[0] == "2" or maMain[0] == "3":
-            if mainBanque < "8":
-                return split
-            else:
+class Carte:
+    def __init__(self, hauteur):
+        """
+        Initialise un objet de type Carte.
+        :param hauteur: Numéro de la Carte.
+        """
+        match hauteur:
+            case 1:
+                self.hauteur = 11
+            case 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9:
+                self.hauteur = hauteur
+            case _:
+                self.hauteur = 10
+
+    def __add__(self, other) -> int:
+        """
+        Permet D'additionner deux cartes entre elles.
+        :param other:
+        :return:
+        """
+        return self.hauteur + other.hauteur
+
+    def __repr__(self) -> int:
+        """
+        Créé la méthode du retour de la fonction print de l'objet
+        :return: Points de la Carte.
+        """
+
+        match self.hauteur:
+            case 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10:
+                return self.hauteur
+            case _:
+                return 11
+
+    def choix(self, other):
+        stand = "stand"
+        hit = "hit"
+        double = "double"
+        split = "split"
+
+        maMain = self.hauteur
+        mainBanque = other.hauteur
+
+        if maMain == mainBanque:
+            match self.hauteur:
+                case 2 | 3 | 7:
+                    return split if mainBanque < 8 else hit
+                case 4:
+                    return split if mainBanque in [5, 6] else hit
+                case 5:
+                    return hit if mainBanque > 9 else double
+                case 6:
+                    return split if mainBanque < 7 else hit
+                case 8 | "A":
+                    return split
+                case 9:
+                    return stand if mainBanque in [7, 10, 11] else split
+                case 10:
+                    return stand
+
+        if maMain == 11:
+            match mainBanque:
+                case 2 | 3:
+                    return double if mainBanque in [5, 6] else hit
+                case 4 | 5:
+                    return double if mainBanque in [4, 5, 6] else hit
+                case 6:
+                    return double if mainBanque in [3, 4, 5, 6] else hit
+                case 7:
+                    return stand if mainBanque in [2, 7, 8] else double if mainBanque in [3, 4, 5, 6] else hit
+                case 8 | 9 | 10:
+                    return stand
+
+        match self.hauteur:
+            case 5 | 6 | 7 | 8:
                 return hit
-        
-        """Double 4"""
-        if maMain[0] == "4":
-            if mainBanque == "5" or mainBanque == "6":
-                return split
-            else:
-                return hit
-        
-        """Double 5"""
-        if maMain[0] == "5":
-            if mainBanque == "10" or mainBanque == "A":
-                return hit
-            else:
-                return double
-        
-        """Double 6"""
-        if maMain[0] == "6":
-            if mainBanque < "7":
-                return split
-            else:
-                return hit
+            case 9:
+                return double if mainBanque in [3, 4, 5] else hit
+            case 10:
+                return hit if mainBanque in [10, 11] else double
+            case 11:
+                return hit if mainBanque == 11 else double
+            case 12:
+                return stand if mainBanque in [4, 5, 6] else hit
+            case 13 | 14 | 14 | 16:
+                return stand if mainBanque < 7 else hit
+            case _:
+                return stand
 
-        """Double 7"""
-        if maMain[0] == "7":
-            if mainBanque < "8":
-                return split
-            else:
-                return hit
 
-        """Double 9"""
-        if maMain[0] == "9":
-            if mainBanque == "7" or mainBanque == "10" or mainBanque == "A":
-                return stay
-            else:
-                return split
-        
-        """Double 10"""
-        if 10 in maMain:
-            return split
-        
-        """Double A ou 8"""
-        if maMain[0] == "A" or maMain[0] == "8":
-            return split
-        
-    """Cas de A + autre"""
-    if "A" in maMain:
-        """A + 2 ou 3"""
-        if "2" in maMain or "3" in maMain:
-            if mainBanque == "5" or mainBanque == "6":
-                return double
-            else:
-                return hit
-        
-        """A + 4 ou 5"""
-        if "4" in maMain or "5" in maMain:
-            if mainBanque == "5" or mainBanque == "6" or mainBanque == "4":
-                return double
-            else:
-                return hit
-        
-        """A + 6"""
-        if "6" in maMain:
-            if "2" < mainBanque < "7":
-                return double
-            else:
-                return hit
-
-        """A + 7"""
-        if "7" in maMain:
-            if mainBanque == "2" or mainBanque == "7" or mainBanque == "8":
-                return split
-            if mainBanque < "7" and mainBanque != "2":
-                return double
-            else:
-                return hit
-        
-        """A + 7 ou 8 ou 9 ou 10"""
-        if "7" in maMain or "8" in maMain or "9" in maMain or "10" in maMain:
-            return stay
-    
-    """Tous les autres cas"""
-    maMain = additionCarte(maMain)
-    """Ligne 17 +"""
-    if "16" < maMain < "20":
-        return stay
-    
-    """Ligne de 16 a 13"""
-    if "12" < maMain < "17":
-        if "1" < mainBanque < "7":
-            return stay
-        else : 
-            return hit
-
-    """Ligne 12"""
-    if maMain == "12":
-        if "3" < mainBanque < "7":
-            return stay
-        else:
-            return hit
-
-    """Ligne 11"""
-    if maMain == "11":
-        if mainBanque == "A":
-            return hit
-        else :
-            return double
-
-    """Ligne 10"""
-    if maMain == "10":
-        if mainBanque == "A" or mainBanque == "10":
-            return hit
-        else :
-            return double
-
-    """Ligne 9"""
-    if maMain == "9":
-        if "2" < mainBanque < "6":
-            return double
-        else :
-            return hit
-    
-    """Ligne 5 a 8"""
-    if "4" <maMain < "9":
-        return hit
-
-class Carte():
-    def __init__(self, hauteur, couleur):
-        """Initialise les attibuts de l'objet"""
-        self.hauteur = hauteur
-        self.couleur = couleur
-        
-    def __repr__(self):
-        """Créé la méthode du retour de la fonction print de l'objet"""
-        haut={2:"2",3:"3",4:"4",5:"5",
-                 6:"6",7:"7",8:"8",9:"9",
-                 10:"10",11:"10",12:"10",13:"10",14:"11"}
-       
-        return str(haut[self.hauteur])
-class PaquetDeCartes():
-    def __init__(self, liste_cartes):
-        """Méthode qui initialise l'attributs d'un jeu de carte"""
-        self.contenu = liste_cartes
-    
-    def __repr__(self):
-        """Méthode qui affiche le jeu complet avec l'appel de la fonction print"""
-        affichage=""
-        for i in range(len(self.contenu)):
-            affichage=affichage + str(self.contenu[i]) + "\n"
-        return affichage
-        
-    def taille(self):
-        """Méthode qui renvoie le nombre de carte du jeu"""
-        return len(self.contenu)
-
-    def est_vide(self):
-        """Méthode qui renvoie true si le jeu est vide sinon False"""
-        if self.contenu == []:
-            return True
-        else:
-            return False
-    
-    def battre(self):
-        """Méthode qui mélange les cartes"""
-        shuffle(self.contenu)
-        
-    def tirer_carte(self):
-        """Méthode qui permet de tirer une carte du paquet de carte"""
-        if self.est_vide():
-            return None
-        else:
-            carte = self.contenu[0]
-            del self.contenu[0]
-            return carte
-
-    def ajouter_carte(self, carte):
-        """Méthode qui ajoute une carte au paquet"""
-        self.contenu.append(carte)
-        
-    def ajouter_paquet(self, paquet):
-        """Méthode qui ajoute un autre paquet au paquet"""
-        while not paquet.est_vide():
-            self.ajouter_carte(paquet.tirer_carte())
-
-    def distribuer(self, nbjoueurs):
-        """Distribuer un paquet en nbjoueurs paquets """
-        Paquets=[PaquetDeCartes([]) for i in range(nbjoueurs)]
-        numero=0
-        while not self.est_vide():
-            Paquets[numero].ajouter_carte(self.tirer_carte())
-            numero=(numero+1)%nbjoueurs
-        return Paquets
-        
-def testJeu():
-    if __name__ == "__main__":
-        #Main program    
-        jeu52=PaquetDeCartes([])
-        for i in range(2,15):
-            for couleur in ["K","T","P","C"]:
-                jeu52.ajouter_carte(Carte(i,couleur))
-                
-        #print("il y a ",jeu52.taille()," cartes dans le paquet")
-        jeu52.battre()
-        maMain = jeu52.tirer_carte(), jeu52.tirer_carte()
-        #print(maMain)
-        mainBanque = jeu52.tirer_carte()
-        #print(mainBanque)
-        #print(jeu52.taille())
-        return maMain, mainBanque
-
-mains = testJeu()
-print(mains)
-maMain=str(mains[0])
-print(maMain)
-mainBanque=str(mains[1])
-print(mainBanque)    
-
-print(coupPredict(mainBanque, maMain))
+if __name__ == '__main__':
+    for i in range(2,12):
+        for j in range(2,12):
+            for k in range(2,12):
+                decider(i,j,k)
+                print(i,j,k)
+                sleep(1)
