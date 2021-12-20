@@ -161,6 +161,8 @@ class Carte():
     def add(self, other):
         return self.hauteur + other.hauteur 
     
+    """Verifie si la carte est egal a une autre"""
+    #Ne marche pas - ????
     def egal(self, other):
         if self.hauteur == other.hauteur:
             print("egal")
