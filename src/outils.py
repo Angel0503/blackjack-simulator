@@ -1,4 +1,3 @@
-import tkinter as tk
 from random import shuffle
 
 def coupPredict(mainBanque, maMain):
@@ -162,7 +161,6 @@ class Carte():
         return self.hauteur + other.hauteur 
     
     """Verifie si la carte est egal a une autre"""
-    #Ne marche pas - ????
     def egal(self, other):
         if self.hauteur == other.hauteur:
             print("egal")
@@ -241,16 +239,3 @@ def testJeu():
 
 mains = testJeu()
 print(mains)
-
-maMain=mains[0]
-print(maMain)
-
-mainBanque=mains[1]
-print(mainBanque)
-
-print(maMain[0])
-print(maMain[1])
-
-print(type(maMain[0]))
-
-print(coupPredict(mainBanque, maMain))
