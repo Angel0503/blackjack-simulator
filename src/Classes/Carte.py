@@ -9,6 +9,9 @@ class Carte:
             case _:
                 self.hauteur = hauteur      
 
+    def getHauteur(self):
+        return self.hauteur
+
     def __add__(self, other) -> int:
         """
         Permet D'additionner deux cartes entre elles.
@@ -20,13 +23,12 @@ class Carte:
     def __sub__(self, other):
         return self.hauteur - other.unAs
     
+    def __eq__(self, other) -> bool:
+        return self.hauteur == other
+
     def __str__(self) -> int:
         """
         Créé la méthode du retour de la fonction print de l'objet
         :return: Points de la Carte.
         """
-    
-        if self.hauteur == 1:    
-            return str(11)
-        else:
-            return str(self.hauteur)
+        return str(self.hauteur)

@@ -45,8 +45,8 @@ class PaquetDeCartes():
     def distribuer(self):
         """Distribuer 2 cartes au joueur et 1 a la banque """
         self.battre()
-        c1 = Carte(self.tirer_carte())
-        c2 = Carte(self.tirer_carte())
-        carteBanque = Carte(self.tirer_carte())
+        c1 = self.tirer_carte()
+        c2 = self.tirer_carte()
+        carteBanque = self.tirer_carte()
         
         return c1, c2, carteBanque

@@ -1,6 +1,8 @@
 class MainJeu:
-    def __init__(self,listeCarte):
+    def __init__(self,listeCarte, unAs):
         self.uneMain = listeCarte
+        self.unAs = unAs
+        self.hauteur = self.uneMain[0].hauteur + self.uneMain[1].hauteur
         
     def __str__(self):
         message=""
@@ -8,11 +10,17 @@ class MainJeu:
             message += "Carte : " + str(elmt.hauteur) + " "
         return message
     
+    def getCarte1(self):
+        return self.uneMain[0]
+    
+    def getCarte2(self):
+        return self.uneMain[1]
+
     def estPaire(self):
-        return True if self.uneMain[0].hauteur == self.uneMain[1].hauteur else False
+        return self.uneMain[0] == self.uneMain[1]
     
     def contientAs(self):
-        return True if self.uneMain[0].hauteur == 11 or self.uneMain[1].hauteur == 11 else False
+        return True if self.uneMain[0] == self.unAs or self.uneMain[1] == self.unAs else False
     
     def ajouterCarte(self, carte):
         self.uneMain.append(carte)
@@ -24,7 +32,7 @@ class MainJeu:
         split = "split"
         
         if self.estPaire():
-            match self.carte1.hauteur:
+            match self.uneMain[0].hauteur:
                 case 2 | 3:
                     return split if mainBanque.hauteur < 8 else hit
                 case 4:
@@ -42,7 +50,7 @@ class MainJeu:
                 case 8 | 11:
                     return split
         elif self.contientAs():
-            match self.hauteur - self:
+            match self.hauteur - self.unAs.hauteur:
                 case 2 | 3:
                     return double if mainBanque.hauteur in [5, 6] else hit
                 case 4 | 5:
