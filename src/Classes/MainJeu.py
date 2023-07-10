@@ -2,19 +2,25 @@ class MainJeu:
     def __init__(self,listeCarte, unAs):
         self.uneMain = listeCarte
         self.unAs = unAs
-        self.hauteur = self.uneMain[0].hauteur + self.uneMain[1].hauteur
+        self.hauteur = self.calculTotal()
+        self.mise = 5
+        self.miseTotal = 5
+        self.stand = False
         
     def __str__(self):
         message=""
         for elmt in self.uneMain:
             message += "Carte : " + str(elmt.hauteur) + " "
-        return message
-    
-    def getCarte1(self):
-        return self.uneMain[0]
-    
-    def getCarte2(self):
-        return self.uneMain[1]
+        return message + " Total : " + str(self.hauteur)
+
+    def ajouterMise(self):
+        self.miseTotal += self.mise
+
+    def calculTotal(self):
+        total = 0
+        for carte in self.uneMain:
+            total += carte.hauteur
+        return total
 
     def estPaire(self):
         return self.uneMain[0] == self.uneMain[1]
@@ -24,6 +30,8 @@ class MainJeu:
     
     def ajouterCarte(self, carte):
         self.uneMain.append(carte)
+        self.hauteur = self.calculTotal()
+        print("Carte ajoute : " + str(carte))
         
     def choix(self, mainBanque):
         stand = "stand"

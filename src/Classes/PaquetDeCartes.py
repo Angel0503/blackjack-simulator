@@ -24,7 +24,7 @@ class PaquetDeCartes():
             return True
         else:
             return False
-    
+        
     def battre(self):
         """Méthode qui mélange les cartes"""
         shuffle(self.contenu)
