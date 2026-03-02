@@ -1,24 +1,9 @@
-from Class.Deck import Deck  
+from Class.Game import Game  
 
 if __name__ == '__main__':
-    deck=Deck()
-    playerHand, bankHand = deck.deal()
-
-    print("Player")
-    print(playerHand)
-
-    print("Bank")
-    print(bankHand)
-
-    print("Choice")
-    print(playerHand.bestChoice(bankHand))
-
-    match playerHand.bestChoice(bankHand):
-        case "hit":
-            playerHand.hit(deck, playerHand)
-        case "split":
-            playerHand.split(deck)
-        case "double":
-            playerHand.double(deck)
-        case "stand":
-            playerHand.standAction()
+    bj_game = Game()
+    print(bj_game)
+    print(bj_game.playerChoice())
+    bj_game.nextPlay()
+    print(bj_game)
+    print(bj_game.hasPlayerWin())

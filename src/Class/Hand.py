@@ -32,7 +32,6 @@ class Hand:
     def addCard(self, card):
         self.cards.append(card)
         self.value = self.getSumOfCardValues()
-        print("Card added : " + str(card))
         
     def bestChoice(self, bankHand):
         stand = "stand"
@@ -110,3 +109,13 @@ class Hand:
         self.hit(deck, splittedHand)
 
         return splittedHand
+    
+    def isWin(self, bankHand):
+        if self.value > 21:
+            return "Lose"
+        elif self.value == 21 and len(self.cards) == 2:
+            return "Blackjack"
+        elif bankHand.value > 21:
+            return "Win"
+        else:
+            return "Win" if self.value > bankHand.value else "Lose"
