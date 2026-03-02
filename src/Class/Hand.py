@@ -1,7 +1,7 @@
 from Class.Card import Card
 
 class Hand:
-    def __init__(self, cardList, bet=10, is_split=False):
+    def __init__(self, cardList, bet=10, is_split=False, verbose=False):
         self.cards = cardList
         self.value = self.getSumOfCardValues()
         self.bet = bet
@@ -9,6 +9,7 @@ class Hand:
         self.stand = False
         self.ace = Card(1)
         self.is_split = is_split 
+        self.verbose = verbose
         
     def __str__(self):
         cards_str = " | ".join(str(card.value) for card in self.cards)
@@ -103,7 +104,8 @@ class Hand:
     def hit(self, deck, hand):
         newCard = deck.drawCard()
         hand.addCard(newCard)
-        print(f"Player hit : {newCard}")
+        if self.verbose:
+            print(f"Player hit : {newCard}")
 
     def standAction(self):
         self.stand = True

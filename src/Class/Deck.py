@@ -40,13 +40,13 @@ class Deck():
     def addCard(self, card):
         self.allCards.append(card)
         
-    def deal(self):
+    def deal(self, verbose=False):
         """Deal 2 cards to the player and 1 to the bank"""
         self.shuffle()
         c1 = self.drawCard()
         c2 = self.drawCard()
         bankCard = self.drawCard()
         
-        playerHand = Hand([c1, c2])
-        bankHand = Hand([bankCard])
+        playerHand = Hand([c1, c2], verbose=verbose)
+        bankHand = Hand([bankCard], verbose=verbose)
         return playerHand, bankHand

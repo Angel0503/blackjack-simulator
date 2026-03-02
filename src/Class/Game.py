@@ -1,9 +1,10 @@
 from Class.Deck import Deck
 
 class Game:
-    def __init__(self):
+    def __init__(self, verbose=False):
+        self.verbose = verbose
         self.deck = Deck()
-        initialHand, self.bankHand = self.deck.deal()
+        initialHand, self.bankHand = self.deck.deal(verbose=verbose)
         self.playerHands = [initialHand] 
     
     def __str__(self):
@@ -14,21 +15,25 @@ class Game:
         while(self.bankHand.value < 17):
             drawnCard = self.deck.drawCard()
             self.bankHand.addCard(drawnCard)
-            print(f"Bank draws card:{drawnCard}, total: {self.bankHand.value}")
+            if self.verbose:
+                print(f"Bank draws card:{drawnCard}, total: {self.bankHand.value}")
 
     def handlePlayerAction(self):
-        print("#----PLAYER'S TURN----#")
+        if self.verbose:
+            print("#----PLAYER'S TURN----#")
         
         i = 0
         while i < len(self.playerHands):
             current_hand = self.playerHands[i]
             
             if len(self.playerHands) > 1:
-                print(f"\n--- Playing Hand {i+1} ---")
+                if self.verbose:
+                    print(f"\n--- Playing Hand {i+1} ---")
             
             while not current_hand.stand and current_hand.value <= 21:
                 choice = current_hand.bestChoice(self.bankHand)
-                print(f"Player choice: {choice}")
+                if self.verbose:
+                    print(f"Player choice: {choice}")
                 
                 match choice:
                     case "hit":
@@ -36,8 +41,9 @@ class Game:
                     case "split":
                         new_hand = current_hand.split(self.deck)
                         self.playerHands.append(new_hand) 
-                        print(f"Base hand: {current_hand}")
-                        print(f"New split hand added: {new_hand}")
+                        if self.verbose:
+                            print(f"Base hand: {current_hand}")
+                            print(f"New split hand added: {new_hand}")
                     case "double":
                         if current_hand.getNumberOfCardInHand() == 2:
                             current_hand.double(self.deck)
@@ -48,16 +54,19 @@ class Game:
                         current_hand.standAction()
                         
             if current_hand.value > 21:
-                print(f"Hand busts with {current_hand.value}")
+                if self.verbose:
+                    print(f"Hand busts with {current_hand.value}")
             
             i += 1
                 
         all_busted = all(hand.value > 21 for hand in self.playerHands)
         
         if all_busted:
-            print("\nAll player hands busted")
+            if self.verbose:
+                print("\nAll player hands busted")
         else:
-            print("\n#----BANK'S TURN----#")
+            if self.verbose:
+                print("\n#----BANK'S TURN----#")
             self.bankDraw()
 
     def hasPlayerWin(self):
@@ -66,3 +75,9 @@ class Game:
             result = hand.isWin(self.bankHand)
             results.append(f"Hand {i+1}: {result}")
         return " | ".join(results)
+
+    def getPlayerResults(self):
+        results = []
+        for hand in self.playerHands:
+            results.append(hand.isWin(self.bankHand))
+        return results
