@@ -1,18 +1,18 @@
 from Class.Card import Card
+
 class Hand:
-    def __init__(self, cardList, bet=10):
+    def __init__(self, cardList, bet=10, is_split=False):
         self.cards = cardList
         self.value = self.getSumOfCardValues()
         self.bet = bet
         self.totalBet = bet
         self.stand = False
         self.ace = Card(1)
+        self.is_split = is_split 
         
     def __str__(self):
-        message=""
-        for elmt in self.cards:
-            message += " " + str(elmt.value) + " -"
-        return message + "-> Value : " + str(self.value)
+        cards_str = " | ".join(str(card.value) for card in self.cards)
+        return f"{cards_str}  (Total: {self.value})"
 
     def addBet(self):
         self.totalBet += self.bet
@@ -115,7 +115,9 @@ class Hand:
     def split(self, deck):
         card = self.cards[0]
         del self.cards[0]
-        splittedHand = Hand([card])
+        
+        self.is_split = True
+        splittedHand = Hand([card], bet=self.bet, is_split=True)
 
         self.hit(deck, self)
         self.hit(deck, splittedHand)
@@ -125,7 +127,7 @@ class Hand:
     def isWin(self, bankHand):
         if self.value > 21:
             return "Lose"
-        elif self.value == 21 and len(self.cards) == 2:
+        elif self.value == 21 and len(self.cards) == 2 and not self.is_split:
             return "Blackjack"
         elif bankHand.value > 21:
             return "Win"
