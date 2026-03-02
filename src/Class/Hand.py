@@ -1,33 +1,44 @@
 from Class.Card import Card
 class Hand:
-    def __init__(self, cardList):
+    def __init__(self, cardList, bet=10):
         self.cards = cardList
         self.value = self.getSumOfCardValues()
-        self.bet = 10
-        self.totalBet = 10
+        self.bet = bet
+        self.totalBet = bet
         self.stand = False
         self.ace = Card(1)
         
     def __str__(self):
         message=""
         for elmt in self.cards:
-            message += "Card : " + str(elmt.value) + " "
-        return message + " Total value : " + str(self.value)
+            message += " " + str(elmt.value) + " -"
+        return message + "-> Value : " + str(self.value)
 
     def addBet(self):
         self.totalBet += self.bet
 
+    def getNumberOfCardInHand(self):
+        return len(self.cards)
+
     def getSumOfCardValues(self):
         total = 0
+        aces = 0
         for card in self.cards:
             total += card.value
+            if card.value == 11:
+                aces += 1
+        
+        while total > 21 and aces > 0:
+            total -= 10
+            aces -= 1
+            
         return total
 
     def isPair(self):
-        return self.cards[0] == self.cards[1]
+        return self.cards[0] == self.cards[1] and self.getNumberOfCardInHand() == 2
     
     def hasAce(self):
-        return True if self.cards[0] == self.ace or self.cards[1] == self.ace else False
+        return any(card.value == 11 for card in self.cards)
     
     def addCard(self, card):
         self.cards.append(card)
@@ -92,6 +103,7 @@ class Hand:
     def hit(self, deck, hand):
         newCard = deck.drawCard()
         hand.addCard(newCard)
+        print(f"Player hit : {newCard}")
 
     def standAction(self):
         self.stand = True
@@ -103,7 +115,7 @@ class Hand:
     def split(self, deck):
         card = self.cards[0]
         del self.cards[0]
-        splittedHand = Hand([card], Card(1))
+        splittedHand = Hand([card])
 
         self.hit(deck, self)
         self.hit(deck, splittedHand)
@@ -117,5 +129,7 @@ class Hand:
             return "Blackjack"
         elif bankHand.value > 21:
             return "Win"
+        elif self.value == bankHand.value:
+            return "Push"
         else:
             return "Win" if self.value > bankHand.value else "Lose"

@@ -1,4 +1,3 @@
-
 class Card:
     def __init__(self, value=0):
         match value:
@@ -12,14 +11,14 @@ class Card:
     def getvalue(self):
         return self.value
 
-    def __add__(self, other) -> int:
+    def __add__(self, other):
         return self.value + other.value
     
     def __sub__(self, other):
-        return self.value - other.unAs
+        return self.value - other.value
     
-    def __eq__(self, other) -> bool:
-        return self.value == other
+    def __eq__(self, other):
+        return isinstance(other, Card) and self.value == other.value
 
-    def __str__(self) -> int:
+    def __str__(self):
         return str(self.value)

@@ -1,5 +1,5 @@
 
-from random import shuffle
+import random
 
 from Class.Hand import Hand
 from Class.Card import Card
@@ -27,7 +27,7 @@ class Deck():
             return False
         
     def shuffle(self):
-        shuffle(self.allCards)
+        random.shuffle(self.allCards)
         
     def drawCard(self):
         if self.isEmpty():
