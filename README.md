@@ -15,14 +15,17 @@ The code relies on a specific directory structure. Make sure your files are orga
 
     blackjack-simulator/
     │
-    ├── Class/                 # Contains all object classes
-    │   ├── __init__.py        # (Optional) empty file to mark directory as a module
-    │   ├── Card.py            # Card object definition and math logic
-    │   ├── Deck.py            # Deck generation, shuffling, and dealing logic
-    │   ├── Hand.py            # Hand evaluation, score counting, and basic strategy
-    │   └── Game.py            # The main game engine and turn loop
+    ├── docs/                      
+    │   └── basic-strategy.jpg     # Visual basic strategy guide
     │
-    └── main.py                # The entry point to run the simulation
+    └── src/                      
+        ├── main.py                # The entry point to run the simulation
+        │
+        └── Class/                 
+            ├── Card.py            # Card object definition and math logic
+            ├── Deck.py            # Deck generation, shuffling, and dealing logic
+            ├── Game.py            # The main game engine and turn loop
+            └── Hand.py            # Hand evaluation, score counting, and basic strategy
 
 ## ⚙️ Prerequisites
 
