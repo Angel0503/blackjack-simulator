@@ -5,6 +5,7 @@ A fully functional, object-oriented Blackjack simulation built in Python. This p
 ## ✨ Features
 
 * **Basic Strategy Automation:** The virtual player makes mathematically optimal decisions (Hit, Stand, Double, Split) based on their hand and the dealer's upcard.
+* **Pluggable Betting Strategies:** Employs the Strategy Design Pattern to seamlessly swap between Flat Betting and dynamic Card Counting (like the Hi-Lo system), scaling bets based on the true count of the shoe.
 * **Realistic Casino Shoe:** Simulates a persistent multi-deck shoe (e.g., 6 or 8 decks) across games. Cards are dealt continuously and the shoe is only reshuffled when the "cut card" is reached (75% empty), perfectly mirroring real-world casino variance.
 * **Advanced Hand Management:** Seamlessly handles edge cases like dynamic Aces (switching from 11 to 1 to avoid busting) and recursive hand splitting (splitting a hand, then splitting the splits).
 * **Realistic Bankroll Tracking:** Tracks player balance across thousands of games. Features 3:2 payouts for Blackjacks, 1:1 for standard wins, and bankroll checks to prevent doubling/splitting when broke.
@@ -26,7 +27,8 @@ The code relies on a specific directory structure. Make sure your files are orga
             ├── Card.py            # Card object definition and math logic
             ├── Deck.py            # Deck generation, shuffling, and dealing logic
             ├── Game.py            # The main game engine and turn loop
-            └── Hand.py            # Hand evaluation, score counting, and basic strategy
+            ├── Hand.py            # Hand evaluation, score counting, and playing choices
+            └── BettingStrategy.py # Betting strategies (Flat, Hi-Lo)
 
 ## ⚙️ Prerequisites
 
@@ -47,6 +49,7 @@ The code relies on a specific directory structure. Make sure your files are orga
 
 You can easily tweak the simulation parameters by editing the variables inside the `if __name__ == '__main__':` block in `main.py`:
 
+* **`active_strategy`**: Choose the betting system (e.g., `FlatBetting()` or `HiLo()`).
 * **`games_to_play`**: Change the number of games to simulate (e.g., `10_000`).
 * **`number_of_decks`**: Change the size of the shoe (e.g., `6` for standard modern casinos).
 * **`starting_balance`**: Set the player's initial bankroll (e.g., `1000`).
@@ -54,20 +57,22 @@ You can easily tweak the simulation parameters by editing the variables inside t
     * Set to `True` for an infinite bankroll (good for pure statistical testing).
     * Set to `False` for realistic casino rules (simulation stops if the player goes bankrupt).
 * **Verbose Mode**: To see a game played out step-by-step, change `verbose=False` to `verbose=True` when initializing the game:
-    `bj_game = Game(deck=shoe, balance=current_balance, allow_negative=allow_negative_balance, verbose=True)`
+    `bj_game = Game(deck=shoe, balance=current_balance, allow_negative=allow_negative_balance, bet_size=current_bet, verbose=True)`
 
 ## 📊 Example Output (Simulation Mode)
 
-    Simulating 10000 games of Blackjack with 6 decks...
+    Simulating 10000 games with 6 decks...
+    Strategy: Hi-Lo Card Counting
     Starting Balance: $1000
     
     #--------- SIMULATION RESULTS ---------#
+    Strategy Used: Hi-Lo Card Counting
     Games Played: 10000 / 10000
     Total Hands Evaluated: 10245
     Shoe Reshuffles: 135
     ----------------------------------------
-    Final Balance: $845.00
-    Net Profit/Loss: $-155.00
+    Final Balance: $2145.00
+    Net Profit/Loss: $1145.00
     ----------------------------------------
     Wins:       4310 (42.07%)
     Blackjacks: 482 (4.70%)
