@@ -1,12 +1,14 @@
 from Class.Deck import Deck
 
 class Game:
-    def __init__(self, deck, balance=1000, allow_negative=False, base_bet=10, verbose=False):
+    def __init__(self, deck, playing_strategy, balance=1000, allow_negative=False, base_bet=10, verbose=False):
         self.balance = balance
         self.allow_negative = allow_negative
         self.verbose = verbose
         self.base_bet = 10
         self.balance -= self.base_bet
+
+        self.playing_strategy = playing_strategy
 
         self.deck = deck
         initialHand, self.bankHand = self.deck.deal(verbose=verbose)
@@ -36,8 +38,7 @@ class Game:
                 print(f"\n--- Playing Hand {i+1} ---")
             
             while not current_hand.stand and current_hand.value <= 21:
-                choice = current_hand.bestChoice(self.bankHand)
-                
+                choice = self.playing_strategy.get_best_choice(current_hand, self.bankHand)                
                 if choice in ["split", "double"]:
                     if not self.allow_negative and self.balance < self.base_bet:
                         if self.verbose:

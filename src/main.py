@@ -1,14 +1,18 @@
 from Class.Game import Game  
 from Class.Deck import Deck
 from Class.BettingStrategy import FlatBetting, HiLo, BettingStrategy
+from Class.PlayingStrategy import BasicStrategy
 
 if __name__ == '__main__':    
     #---SIMULATION SETTINGS---#
     games_to_play = 10_000
     number_of_decks = 6
+
     betting_strategy = HiLo() 
     # betting_strategy = FlatBetting()
     # betting_strategy = BettingStrategy()
+
+    playing_strategy = BasicStrategy()
 
     #---BANKROLL SETTINGS---#
     starting_balance = 1000
@@ -22,7 +26,8 @@ if __name__ == '__main__':
     reshuffles = 0
 
     print(f"Simulating {games_to_play} games with {number_of_decks} decks...")
-    print(f"Strategy: {betting_strategy.name}")
+    print(f"Betting Strategy: {betting_strategy.name}")
+    print(f"Playing Strategy: {playing_strategy.name}")
     print(f"Starting Balance: ${starting_balance}")
 
     shoe = Deck(num_decks=number_of_decks, strategy=betting_strategy)
@@ -36,9 +41,9 @@ if __name__ == '__main__':
             reshuffles += 1
 
         current_bet = betting_strategy.get_bet_size(base_bet, shoe.get_remaining_decks())
-
         bj_game = Game(
             deck=shoe, 
+            playing_strategy=playing_strategy,
             balance=current_balance, 
             allow_negative=allow_negative_balance, 
             base_bet=base_bet,
