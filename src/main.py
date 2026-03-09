@@ -1,39 +1,47 @@
 from Class.Game import Game  
 from Class.Deck import Deck
+from Class.BettingStrategy import FlatBetting, HiLo, BettingStrategy
 
 if __name__ == '__main__':    
     #---SIMULATION SETTINGS---#
     games_to_play = 10_000
     number_of_decks = 6
+    betting_strategy = HiLo() 
+    # betting_strategy = FlatBetting()
+    # betting_strategy = BettingStrategy()
 
     #---BANKROLL SETTINGS---#
     starting_balance = 1000
     current_balance = starting_balance
     allow_negative_balance = True
+    base_bet = 10
 
     #---STATISTICS SETUP---#
     wins, losses, pushes, blackjacks, total_hands = 0, 0, 0, 0, 0
     games_actually_played = 0
     reshuffles = 0
 
-    print(f"Simulating {games_to_play} games of Blackjack with {number_of_decks} decks...")
+    print(f"Simulating {games_to_play} games with {number_of_decks} decks...")
+    print(f"Strategy: {betting_strategy.name}")
     print(f"Starting Balance: ${starting_balance}")
 
-    shoe = Deck(num_decks=number_of_decks)
+    shoe = Deck(num_decks=number_of_decks, strategy=betting_strategy)
     for i in range(games_to_play):
-        if not allow_negative_balance and current_balance < 10:
+        if not allow_negative_balance and current_balance < base_bet:
             print(f"\n❌ BANKRUPT! Player ran out of money at game {i+1}.")
             break
         
         if shoe.needs_reshuffle():
             shoe.build_and_shuffle()
             reshuffles += 1
-        
+
+        current_bet = betting_strategy.get_bet_size(base_bet, shoe.get_remaining_decks())
+
         bj_game = Game(
             deck=shoe, 
             balance=current_balance, 
             allow_negative=allow_negative_balance, 
-            base_bet=10,
+            base_bet=base_bet,
             verbose=False
         ) 
         
