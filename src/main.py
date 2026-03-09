@@ -1,29 +1,42 @@
 from Class.Game import Game  
+from Class.Deck import Deck
 
-if __name__ == '__main__':
+if __name__ == '__main__':    
+    #---SIMULATION SETTINGS---#
     games_to_play = 10_000
-    
+    number_of_decks = 6
+
     #---BANKROLL SETTINGS---#
     starting_balance = 1000
     current_balance = starting_balance
     allow_negative_balance = True
-    
-    #---GAME SETTINGS---#
-    number_of_decks = 6
 
     #---STATISTICS SETUP---#
     wins, losses, pushes, blackjacks, total_hands = 0, 0, 0, 0, 0
     games_actually_played = 0
+    reshuffles = 0
 
-    print(f"Simulating {games_to_play} games of Blackjack...")
+    print(f"Simulating {games_to_play} games of Blackjack with {number_of_decks} decks...")
     print(f"Starting Balance: ${starting_balance}")
 
+    shoe = Deck(num_decks=number_of_decks)
     for i in range(games_to_play):
         if not allow_negative_balance and current_balance < 10:
             print(f"\n❌ BANKRUPT! Player ran out of money at game {i+1}.")
             break
-            
-        bj_game = Game(balance=current_balance, allow_negative=allow_negative_balance, verbose=False) 
+        
+        if shoe.needs_reshuffle():
+            shoe.build_and_shuffle()
+            reshuffles += 1
+        
+        bj_game = Game(
+            deck=shoe, 
+            balance=current_balance, 
+            allow_negative=allow_negative_balance, 
+            base_bet=10,
+            verbose=False
+        ) 
+        
         bj_game.handlePlayerAction()
         
         current_balance = bj_game.calculateFinalBalance()
@@ -37,7 +50,6 @@ if __name__ == '__main__':
             elif outcome == "Push": pushes += 1
             elif outcome == "Blackjack": blackjacks += 1
 
-    # --- RESULTS ---
     win_pct = (wins / total_hands) * 100
     loss_pct = (losses / total_hands) * 100
     push_pct = (pushes / total_hands) * 100
@@ -46,6 +58,7 @@ if __name__ == '__main__':
     print("\n#--------- SIMULATION RESULTS ---------#")
     print(f"Games Played: {games_actually_played} / {games_to_play}")
     print(f"Total Hands Evaluated: {total_hands}")
+    print(f"Shoe Reshuffles: {reshuffles}")
     print("----------------------------------------")
     print(f"Final Balance: ${current_balance:.2f}")
     print(f"Net Profit/Loss: ${(current_balance - starting_balance):.2f}")
