@@ -1,14 +1,14 @@
 from Class.Deck import Deck
 
 class Game:
-    def __init__(self, balance=1000, allow_negative=False, base_bet=10, verbose=False):
+    def __init__(self, balance=1000, allow_negative=False, base_bet=10, verbose=False, num_decks=1):
         self.balance = balance
         self.allow_negative = allow_negative
         self.verbose = verbose
         self.base_bet = 10
         self.balance -= self.base_bet
 
-        self.deck = Deck()
+        self.deck = Deck(num_decks=num_decks)
         initialHand, self.bankHand = self.deck.deal(verbose=verbose)
         self.playerHands = [initialHand] 
     

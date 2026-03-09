@@ -3,11 +3,15 @@ from Class.Game import Game
 if __name__ == '__main__':
     games_to_play = 10_000
     
-    # --- BANKROLL SETTINGS ---
+    #---BANKROLL SETTINGS---#
     starting_balance = 1000
     current_balance = starting_balance
     allow_negative_balance = True
     
+    #---GAME SETTINGS---#
+    number_of_decks = 6
+
+    #---STATISTICS SETUP---#
     wins, losses, pushes, blackjacks, total_hands = 0, 0, 0, 0, 0
     games_actually_played = 0
 

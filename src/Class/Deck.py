@@ -4,11 +4,12 @@ from Class.Hand import Hand
 from Class.Card import Card
 
 class Deck():
-    def __init__(self):
+    def __init__(self, num_decks=1):
         self.allCards = []
-        for i in range(1,14):
-            for _ in ["hearts","clubs","spades","diamonds"]:
-                self.allCards.append(Card(i))
+        for _ in range(num_decks):
+            for i in range(1,14):
+                for _ in ["hearts","clubs","spades","diamonds"]:
+                    self.allCards.append(Card(i))
     
     def __repr__(self):
         message=""
