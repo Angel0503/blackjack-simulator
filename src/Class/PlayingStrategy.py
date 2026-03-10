@@ -47,3 +47,17 @@ class BasicStrategy(PlayingStrategy):
                 case 12: return stand if bankHand.value in [4, 5, 6] else hit
                 case 13 | 14 | 15 | 16: return stand if bankHand.value < 7 else hit
                 case _: return stand
+
+class NeverBustStrategy(PlayingStrategy):
+    def __init__(self):
+        super().__init__()
+        self.name = "Never Bust (Stand on 12+)"
+
+    def get_best_choice(self, hand, bankHand):
+        # Always split Aces and 8s (basic rule of thumb)
+        if hand.isPair() and hand.cards[0].value in [8, 11]:
+            return "split"
+        # If we have 12 or more, we ALWAYS stand to avoid busting
+        if hand.value >= 12:
+            return "stand"
+        return "hit"
